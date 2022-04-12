@@ -68,6 +68,32 @@ int test_str4 = test_str<XLOPER>();
 int test_str12 = test_str<XLOPER12>();
 
 template<class X>
+int test_bool()
+{
+	{
+
+
+	}
+	return 0;
+}
+int test_bool4 = test_bool<XLOPER>();
+int test_bool12 = test_bool<XLOPER12>();
+
+template<class X>
+int test_err()
+{
+	{
+		ensure(xlerrNA == XErr<X>(xlerrNA).val.err);
+		ensure(xlerrNull == ErrNull4.val.err);
+		ensure(xlerrDiv0 == ErrDiv0.val.err);
+	}
+
+	return 0;
+}
+int test_err4 = test_err<XLOPER>();
+int test_err12 = test_err<XLOPER12>();
+
+template<class X>
 int test_multi()
 {
 	{
@@ -125,6 +151,22 @@ int test_multi()
 		ensure(m == XNil<X>);
 	}
 
+		m.stack(XOPER<X>(data<X>::abc));
+		ensure(2 == m.rows());
+		ensure(1 == m.columns());
+		ensure(m[0] == 1.23);
+		ensure(m[1] == data<X>::abc);
+
+		m.resize(1, 2);
+		m.stack(m);
+		ensure(2 == m.rows());
+		ensure(2 == m.columns());
+		ensure(m[0] == 1.23);
+		ensure(m[1] == data<X>::abc);
+		ensure(m(1,0) == 1.23);
+		ensure(m(1,1) == data<X>::abc);
+	}
+
 	return 0;
 }
 int test_multi4 = test_multi<XLOPER>();
@@ -166,7 +208,7 @@ int test_json()
 		//ensure(JSON_t::Object == XJSON<X>({ {data<X>::abc, XJSON<X>(1.23)}, {data<X>::def, XJSON<X>(4.56)} }).jstype());
 	}
 	{
-		//XJSON<X> o(std::map( {{ data<X>::abc, XOPER<X>(1.23) } }));
+		//XJSON<X> o({ {{ data<X>::abc, XOPER<X>(1.23) }} });
 	}
 
 	return 0;
