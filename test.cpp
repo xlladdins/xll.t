@@ -39,39 +39,33 @@ int test_num()
 int test_num4 = test_num<XLOPER>();
 int test_num12 = test_num<XLOPER12>();
 
-
+template<class X>
 int test_str()
 {
 	{
-		OPER4 s("abc");
-		OPER4 s2{ s };
+		XOPER<X> s(data<X>::abc);
+		XOPER<X> s2{ s };
 		ensure(s == s2);
-		//s = s2;
+		s = s2;
 		ensure(!(s != s2));
 
-		ensure(s == "abc");
+		ensure(s == data<X>::abc);
 	}
 	{
-		OPER s(L"abc");
-		OPER s2{ s };
-		ensure(s == s2);
-		//s = s2;
-		ensure(!(s != s2));
-	}
-	{
-		OPER4 s("abc");
+		OPER4 s("4");
 		s.append("def");
-		ensure(s == "abcdef");
+		ensure(s == "4def");
 	}
 	{
-		OPER s(L"abc");
+		OPER s(L"12");
 		s.append(L"def");
-		ensure(s == L"abcdef");
+		ensure(s == L"12def");
 	}
 
 	return 0;
 }
-int test_str_ = test_str();
+int test_str4 = test_str<XLOPER>();
+int test_str12 = test_str<XLOPER12>();
 
 template<class X>
 int test_multi()
@@ -92,6 +86,11 @@ int test_multi()
 		ensure(m[1] == data<X>::abc);
 		m[2] = data<X>::abc;
 		ensure(m[2] == data<X>::abc);
+
+		XOPER<X> m2{ m };
+		ensure(m2 == m);
+		m = m2;
+		ensure(!(m != m2));
 	}
 	{
 		XOPER<X> m(2, 3);
@@ -100,11 +99,36 @@ int test_multi()
 		m[0][0] = m;
 		ensure(m[0][0][1] == data<X>::abc);
 	}
+	{
+		XOPER<X> m(2, 3);
+		m.stack(m);
+		ensure(4 == m.rows());
+		ensure(3 == m.columns());
+	}
+	{
+		XOPER<X> m;
+		XOPER<X> m0(data<X>::abc);
+		m.stack(m0);
+		ensure(m == m0);
+		m0.stack(m0);
+		ensure(xltypeMulti == m0.type());
+		ensure(2 == m0.rows());
+		ensure(1 == m0.columns());
+		ensure(m0[0] == data<X>::abc);
+		ensure(m0(1, 0) == data<X>::abc);
+		ensure(m0(0, 0) == m);
+	}
+	{
+		XOPER<X> m(3, 2);
+		m.resize(0, 0);
+		ensure(xltypeNil == m.type());
+		ensure(m == XNil<X>);
+	}
 
 	return 0;
 }
 int test_multi4 = test_multi<XLOPER>();
-int test_multi12 = test_multi<XLOPER12>();
+//int test_multi12 = test_multi<XLOPER12>();
 
 template<class X>
 int test_oper()
@@ -128,18 +152,18 @@ int test_oper()
 }
 int test_oper4 = test_oper<XLOPER>();
 int test_oper12 = test_oper<XLOPER12>();
-
+/*
 template<class X>
 int test_json()
 {
 	{
-		ensure(JSONtype::Null == XJSON<X>{}.jstype());
-		ensure(JSONtype::False == XJSON<X>(false).jstype());
-		ensure(JSONtype::True == XJSON<X>(true).jstype());
-		ensure(JSONtype::Number == XJSON<X>(1.23).jstype());
-		ensure(JSONtype::String == XJSON<X>(data<X>::abc).jstype());
-		ensure(JSONtype::Array == XJSON<X>({ XJSON<X>{}, XJSON<X>(1.23)}).jstype());
-		//ensure(JSONtype::Object == XJSON<X>({ {data<X>::abc, XJSON<X>(1.23)}, {data<X>::def, XJSON<X>(4.56)} }).jstype());
+		ensure(JSON_t::Null == XJSON<X>{}.jstype());
+		ensure(JSON_t::False == XJSON<X>(false).jstype());
+		ensure(JSON_t::True == XJSON<X>(true).jstype());
+		ensure(JSON_t::Number == XJSON<X>(1.23).jstype());
+		ensure(JSON_t::String == XJSON<X>(data<X>::abc).jstype());
+		ensure(JSON_t::Array == XJSON<X>({ XJSON<X>{}, XJSON<X>(1.23)}).jstype());
+		//ensure(JSON_t::Object == XJSON<X>({ {data<X>::abc, XJSON<X>(1.23)}, {data<X>::def, XJSON<X>(4.56)} }).jstype());
 	}
 	{
 		//XJSON<X> o(std::map( {{ data<X>::abc, XOPER<X>(1.23) } }));
@@ -149,7 +173,7 @@ int test_json()
 }
 int test_json4 = test_json<XLOPER>();
 int test_json12 = test_json<XLOPER12>();
-
+*/
 //Macro xai_foo();
 
 extern "C" __declspec(dllexport) int WINAPI macro(void)
