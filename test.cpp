@@ -74,6 +74,32 @@ int test_str()
 int test_str_ = test_str();
 
 template<class X>
+int test_bool()
+{
+	{
+
+
+	}
+	return 0;
+}
+int test_bool4 = test_bool<XLOPER>();
+int test_bool12 = test_bool<XLOPER12>();
+
+template<class X>
+int test_err()
+{
+	{
+		ensure(xlerrNA == XErr<X>(xlerrNA).val.err);
+		ensure(xlerrNull == ErrNull4.val.err);
+		ensure(xlerrDiv0 == ErrDiv0.val.err);
+	}
+
+	return 0;
+}
+int test_err4 = test_err<XLOPER>();
+int test_err12 = test_err<XLOPER12>();
+
+template<class X>
 int test_multi()
 {
 	{
@@ -99,6 +125,28 @@ int test_multi()
 		m[0] = m;
 		m[0][0] = m;
 		ensure(m[0][0][1] == data<X>::abc);
+	}
+	{
+		XOPER<X> m;
+		m.stack(XOPER<X>(1.23));
+		ensure(1 == m.rows());
+		ensure(1 == m.columns());
+		ensure(m[0] == 1.23);
+
+		m.stack(XOPER<X>(data<X>::abc));
+		ensure(2 == m.rows());
+		ensure(1 == m.columns());
+		ensure(m[0] == 1.23);
+		ensure(m[1] == data<X>::abc);
+
+		m.resize(1, 2);
+		m.stack(m);
+		ensure(2 == m.rows());
+		ensure(2 == m.columns());
+		ensure(m[0] == 1.23);
+		ensure(m[1] == data<X>::abc);
+		ensure(m(1,0) == 1.23);
+		ensure(m(1,1) == data<X>::abc);
 	}
 
 	return 0;
@@ -133,16 +181,21 @@ template<class X>
 int test_json()
 {
 	{
-		ensure(JSONtype::Null == XJSON<X>{}.jstype());
-		ensure(JSONtype::False == XJSON<X>(false).jstype());
-		ensure(JSONtype::True == XJSON<X>(true).jstype());
-		ensure(JSONtype::Number == XJSON<X>(1.23).jstype());
-		ensure(JSONtype::String == XJSON<X>(data<X>::abc).jstype());
-		ensure(JSONtype::Array == XJSON<X>({ XJSON<X>{}, XJSON<X>(1.23)}).jstype());
-		//ensure(JSONtype::Object == XJSON<X>({ {data<X>::abc, XJSON<X>(1.23)}, {data<X>::def, XJSON<X>(4.56)} }).jstype());
+		ensure(JSON_t::Null == XJSON<X>{}.jstype());
+		ensure(JSON_t::False == XJSON<X>(false).jstype());
+		ensure(JSON_t::True == XJSON<X>(true).jstype());
+		ensure(JSON_t::Number == XJSON<X>(1.23).jstype());
+		ensure(JSON_t::String == XJSON<X>(data<X>::abc).jstype());
+		//ensure(JSON_t::Array == XJSON<X>({ XJSON<X>{}, XJSON<X>(1.23)}).jstype());
+		/*
+		ensure(JSON_t::Object == XJSON<X>({{
+			{data<X>::abc, XJSON<X>(1.23)},
+			{data<X>::def, XJSON<X>(4.56)}
+			}}).jstype());
+			*/
 	}
 	{
-		//XJSON<X> o(std::map( {{ data<X>::abc, XOPER<X>(1.23) } }));
+		//XJSON<X> o({ {{ data<X>::abc, XOPER<X>(1.23) }} });
 	}
 
 	return 0;

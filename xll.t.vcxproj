@@ -158,7 +158,7 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\test\xll.vcxproj">
+    <ProjectReference Include="..\xll22\xll.vcxproj">
       <Project>{88c498a1-0efe-445e-a5d2-421eb2ef28aa}</Project>
     </ProjectReference>
   </ItemGroup>
