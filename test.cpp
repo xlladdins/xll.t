@@ -61,6 +61,26 @@ int test_str()
 		s.append(L"def");
 		ensure(s == L"12def");
 	}
+	{
+		OPER4 s4("");
+		ensure(xltypeStr == s4.type());
+		ensure(0 == s4.val.str[0]);
+	}
+	{
+		OPER4 s4(L"");
+		ensure(xltypeStr == s4.type());
+		ensure(0 == s4.val.str[0]);
+	}
+	{
+		OPER s("");
+		ensure(xltypeStr == s.type());
+		ensure(0 == s.val.str[0]);
+	}
+	{
+		OPER s(L"");
+		ensure(xltypeStr == s.type());
+		ensure(0 == s.val.str[0]);
+	}
 
 	return 0;
 }
@@ -71,9 +91,16 @@ template<class X>
 int test_bool()
 {
 	{
-
-
+		XOPER<X> b(true);
+		ensure(xltypeBool == b.type());
+		ensure(b);
 	}
+	{
+		XOPER<X> b(false);
+		ensure(xltypeBool == b.type());
+		ensure(!b);
+	}
+
 	return 0;
 }
 int test_bool4 = test_bool<XLOPER>();
@@ -144,6 +171,7 @@ int test_multi()
 		ensure(m0(1, 0) == data<X>::abc);
 		ensure(m0(0, 0) == m);
 	}
+	/*
 	{
 		XOPER<X> m(3, 2);
 		m.resize(0, 0);
@@ -151,20 +179,22 @@ int test_multi()
 		ensure(m == XNil<X>);
 
 		m.stack(XOPER<X>(data<X>::abc));
-		ensure(2 == m.rows());
-		ensure(1 == m.columns());
-		ensure(m[0] == 1.23);
-		ensure(m[1] == data<X>::abc);
+		ensure(m == data<X>::abc);
 
 		m.resize(1, 2);
+		ensure(1 == m.rows());
+		ensure(2 == m.columns());
+		ensure(m[0] == data<X>::abc);
+		m(0, 1) = 1.23;
 		m.stack(m);
 		ensure(2 == m.rows());
 		ensure(2 == m.columns());
-		ensure(m[0] == 1.23);
-		ensure(m[1] == data<X>::abc);
-		ensure(m(1,0) == 1.23);
-		ensure(m(1,1) == data<X>::abc);
+		ensure(m[1] == 1.23);
+		ensure(m[0] == data<X>::abc);
+		ensure(m(1,1) == 1.23);
+		ensure(m(1,0) == data<X>::abc);
 	}
+	*/
 
 	return 0;
 }
