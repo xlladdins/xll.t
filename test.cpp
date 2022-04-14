@@ -149,7 +149,6 @@ int test_multi()
 		m.resize(0, 0);
 		ensure(xltypeNil == m.type());
 		ensure(m == XNil<X>);
-	}
 
 		m.stack(XOPER<X>(data<X>::abc));
 		ensure(2 == m.rows());
